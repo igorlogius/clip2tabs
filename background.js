@@ -1,50 +1,50 @@
 
 const extId = 'tabs2clip';
-const excluded_urls = ['chrome','moz','about','data','blob'];
-const exp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-const regex = new RegExp(exp);
+const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_\+.~#?&//=]*/gm;
 
 async function onBrowserActionClicked() { 
 
-	console.log('onBrowserActionClicked');
 	let notify_title = '';
 	let notify_message = '';
 
 	try {
 
-		const clipText = await navigator.clipboard.readText();
-		console.log('clipText', clipText);
+		const str = await navigator.clipboard.readText();
+		let m;
 
-		let match=false;
-		clipText.trim().split('\n').forEach( (line) => {
-
-			line = line.trim();
-
-			// check if line is valid url
-			if(line.match(regex)) {
-				match=true;
-				browser.tabs.create({
-					active: false,
-					discarded: true,
-					url: line
-				});
-
+		let matchFound=false;
+		while ((m = regex.exec(str)) !== null) {
+			// This is necessary to avoid infinite loops with zero-width matches
+			if (m.index === regex.lastIndex) {
+				regex.lastIndex++;
 			}
 
+			// The result can be accessed through the `m`-variable.
+			m.forEach((match, groupIndex) => {
+				console.log(`Found match, group ${groupIndex}: ${match}`);
 
-		});
+				if(groupIndex === 0) { // group 0 is the full match
+					browser.tabs.create({
+						active: false,
+						discarded: true,
+						url: match 
+					});
+					matchFound=true;
+				}
+			});
+		}
 
 
-		if(match === true){
-			notify_title = "Successfully copied urls to clipboard";
-			notify_message = "Use CTRL+V <PASTE> to insert them into any notepad or editor";
+		if(matchFound === true){
+			notify_title = "Successfully opend urls from clipboard";
+			notify_message = "The tabs are loaded as discared so it should not slow down your browser";
 		}else{
-			throw 'url list empty, please note, that urls starting with "'+ excluded_urls.join('", "') + '" will be ignored';
+			throw `no url found in clipboard which match ${regex}` 
 		}
 
 
 	} catch(e) {
-		notify_title = 'Failed to copy urls to clipboard';
+		notify_title = 'Failed to open clipboard urls';
 		notify_message = e.message;
 	}
 
