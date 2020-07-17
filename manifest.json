@@ -1,0 +1,24 @@
+{
+  "author": "igorlogius",
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "open tabs"
+  },
+  "description": "open tabs from the content of the clipboard",
+  "icons": {
+    "128": "icon.png"
+  },
+  "manifest_version": 2,
+  "name": "clip2tabs",
+  "permissions": [
+    "tabs",
+    "clipboardRead",
+    "notifications"
+  ],
+  "version": "1.0.3"
+}
