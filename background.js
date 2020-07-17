@@ -25,6 +25,7 @@ async function onBrowserActionClicked() {
 				match=true;
 				browser.tabs.create({
 					active: false,
+					discarded: true,
 					url: line
 				});
 
