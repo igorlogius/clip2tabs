@@ -45,7 +45,7 @@ async function onBrowserActionClicked() {
 
 	} catch(e) {
 		notify_title = 'Failed to open clipboard urls';
-		notify_message = e.message;
+		notify_message = e;
 	}
 
 	browser.notifications.create(extId, {
