@@ -20,5 +20,12 @@
     "clipboardRead",
     "notifications"
   ],
-  "version": "1.0.3"
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+O"
+      }
+    }
+  },
+  "version": "1.0.4"
 }
