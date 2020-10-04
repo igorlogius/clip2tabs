@@ -9,6 +9,13 @@
     "default_icon": "icon.png",
     "default_title": "open tabs"
   },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+O"
+      }
+    }
+  },
   "description": "open tabs from the content of the clipboard",
   "icons": {
     "128": "icon.png"
@@ -20,12 +27,5 @@
     "clipboardRead",
     "notifications"
   ],
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Ctrl+Alt+O"
-      }
-    }
-  },
   "version": "1.0.4"
 }
