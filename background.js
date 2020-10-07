@@ -8,7 +8,7 @@ async function onBrowserActionClicked() {
 	let notify_title = '';
 	let notify_message = '';
 
-	let maxOpened = -1;
+	let maxOpened = 99;
 	let first=true;
 	let tmp;
 
