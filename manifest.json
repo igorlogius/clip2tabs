@@ -22,10 +22,15 @@
   },
   "manifest_version": 2,
   "name": "clip2tabs",
+
+  "options_ui": {
+    "page": "options.html"
+  },
   "permissions": [
+    "storage",
     "tabs",
     "clipboardRead",
     "notifications"
   ],
-  "version": "1.0.4"
+  "version": "1.1.4"
 }

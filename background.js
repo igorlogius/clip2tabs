@@ -4,16 +4,38 @@ const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1
 
 async function onBrowserActionClicked() { 
 
+
 	let notify_title = '';
 	let notify_message = '';
+
+	let maxOpened = -1;
+	let first=true;
+	let tmp;
+
+		tmp = await browser.storage.local.get("switch-to-first");
+		switchToFirst = (typeof tmp["switch-to-first"] === 'undefined')? false: tmp["switch-to-first"];
+		
+		tmp = await browser.storage.local.get("replace-activ");
+		replaceActiv = (typeof tmp["replace-activ"] === 'undefined')?false: tmp["replace-activ"];
+	
+	
+	try {
+		tmp = await browser.storage.local.get("max-opened");
+		maxOpened = parseInt(tmp["max-opened"]) ;
+	}catch(err) {
+	}
 
 	try {
 
 		const str = await navigator.clipboard.readText();
+
+		console.log(str);
+
+
 		let m;
 
 		let matchFound=false;
-		while ((m = regex.exec(str)) !== null) {
+		while ((m = regex.exec(str)) !== null ) {
 			// This is necessary to avoid infinite loops with zero-width matches
 			if (m.index === regex.lastIndex) {
 				regex.lastIndex++;
@@ -21,15 +43,26 @@ async function onBrowserActionClicked() {
 
 			// The result can be accessed through the `m`-variable.
 			m.forEach((match, groupIndex) => {
-				console.log(`Found match, group ${groupIndex}: ${match}`);
+				//console.log(`Found match, group ${groupIndex}: ${match}`);
+
+				if(maxOpened <= 0) { return; }
 
 				if(groupIndex === 0) { // group 0 is the full match
-					browser.tabs.create({
-						active: false,
-						discarded: true,
-						url: match 
-					});
+
+					if(first && replaceActiv) {
+						browser.tabs.update({active: true, url: match});
+					}else{
+						browser.tabs.create({
+							active: (first && switchToFirst),
+							discarded: !(first && switchToFirst),
+							url: match 
+						});
+					}
 					matchFound=true;
+					maxOpened--;
+					if(first) {
+						first=false;
+					}
 				}
 			});
 		}
