@@ -16,6 +16,10 @@ async function onBrowserActionClicked() {
 
 		tmp = await browser.storage.local.get("switch-to-first");
 		switchToFirst = (typeof tmp["switch-to-first"] === 'undefined')? false: tmp["switch-to-first"];
+
+		tmp = await browser.storage.local.get("load-activ");
+		loadactiv = (typeof tmp["load-activ"] === 'undefined')? false: tmp["load-activ"];
+		console.log('load-activ', loadactiv);
 		
 		tmp = await browser.storage.local.get("replace-activ");
 		replaceActiv = (typeof tmp["replace-activ"] === 'undefined')?false: tmp["replace-activ"];
@@ -56,7 +60,7 @@ async function onBrowserActionClicked() {
 					}else{
 						browser.tabs.create({
 							active: (first && switchToFirst),
-							discarded: !(first && switchToFirst),
+							discarded: !(first && switchToFirst) && !loadactiv,
 							url: match 
 						});
 					}
@@ -70,10 +74,7 @@ async function onBrowserActionClicked() {
 		}
 
 
-		if(matchFound !== true){
-			//notify_title = "Successfully opend urls from clipboard";
-			//notify_message = "The tabs are loaded as discared so it should not slow down your browser";
-		//}else{
+		if(!matchFound){
 			throw `no url found in clipboard which match ${regex}` 
 		}
 
@@ -81,16 +82,15 @@ async function onBrowserActionClicked() {
 	} catch(e) {
 		notify_title = 'Failed to open clipboard urls';
 		notify_message = e;
-		browser.tabs.executeScript({code: `alert('${notify_title} - ${notify_message}');`});
+
+		browser.notifications.create(extId, {
+			"type": "basic",
+			"iconUrl": browser.runtime.getURL("icon.png"),
+			"title": notify_title, 
+			"message":  notify_message 
+		});
 	}
-/*
-	browser.notifications.create(extId, {
-		"type": "basic",
-		"iconUrl": browser.runtime.getURL("icon.png"),
-		"title": notify_title, 
-		"message":  notify_message 
-	});
-*/
+
 }
 
 // register listener

@@ -27,6 +27,7 @@
   },
   "permissions": [
     "clipboardRead",
+    "notifications",
     "storage",
     "tabs"
   ],

@@ -12,7 +12,7 @@ function onChange(evt) {
 
 }
 
-[ "max-opened", "switch-to-first", "replace-activ" ].map( (id) => {
+[ "max-opened", "switch-to-first", "replace-activ", "load-activ" ].map( (id) => {
 
 	browser.storage.local.get(id).then( (obj) => {
 
