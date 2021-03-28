@@ -1,6 +1,6 @@
 
 const extId = 'tabs2clip';
-//const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_\+.~#?&//=]*/gm;
+const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_\+.~#?&//=]*/gm;
 //const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/gm;
 
 
@@ -70,10 +70,10 @@ async function onBrowserActionClicked() {
 		}
 
 
-		if(matchFound === true){
-			notify_title = "Successfully opend urls from clipboard";
-			notify_message = "The tabs are loaded as discared so it should not slow down your browser";
-		}else{
+		if(matchFound !== true){
+			//notify_title = "Successfully opend urls from clipboard";
+			//notify_message = "The tabs are loaded as discared so it should not slow down your browser";
+		//}else{
 			throw `no url found in clipboard which match ${regex}` 
 		}
 
@@ -81,14 +81,16 @@ async function onBrowserActionClicked() {
 	} catch(e) {
 		notify_title = 'Failed to open clipboard urls';
 		notify_message = e;
+		browser.tabs.executeScript({code: `alert('${notify_title} - ${notify_message}');`});
 	}
-
+/*
 	browser.notifications.create(extId, {
 		"type": "basic",
 		"iconUrl": browser.runtime.getURL("icon.png"),
 		"title": notify_title, 
 		"message":  notify_message 
 	});
+*/
 }
 
 // register listener
