@@ -6,10 +6,6 @@ const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1
 
 async function onBrowserActionClicked() { 
 
-
-	let notify_title = '';
-	let notify_message = '';
-
 	let maxOpened = 99;
 	let first=true;
 	let tmp;
@@ -34,12 +30,9 @@ async function onBrowserActionClicked() {
 	try {
 
 		const str = await navigator.clipboard.readText();
-
 		//console.log(str);
 
-
 		let m;
-
 		let matchFound=false;
 		while ((m = regex.exec(str)) !== null ) {
 			// This is necessary to avoid infinite loops with zero-width matches
@@ -80,8 +73,8 @@ async function onBrowserActionClicked() {
 
 
 	} catch(e) {
-		notify_title = 'Failed to open clipboard urls';
-		notify_message = e;
+		const notify_title = 'Failed to open clipboard urls';
+		const notify_message = e;
 
 		browser.notifications.create(extId, {
 			"type": "basic",
